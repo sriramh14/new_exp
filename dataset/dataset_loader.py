@@ -11,6 +11,7 @@ class TrainDataset(Dataset):
         #Not storing images as it consumes too much space
         self.hyper_list = []
         self.bgr_list = []
+        self.bgr2rgb = bgr2rgb
         h,w = 482,512  # img shape
         if train:
             hyper_data_path = f'{dir_hsi}/Train_spectral/'
@@ -48,14 +49,14 @@ class TrainDataset(Dataset):
     def __getitem__(self, idx):
 
         #Reading hsi file
-        with h5py.File(self.hyper_list, 'r') as mat:
+        with h5py.File(self.hyper_list[idx], 'r') as mat:
             hyper =np.float32(np.array(mat['cube']))
             hyper = np.transpose(hyper, [0, 2, 1])
 
         #Reading rgb file
-        bgr = cv2.imread(self.bgr_list)
+        bgr = cv2.imread(self.bgr_list[idx])
         #Converting to rgb from bgr 
-        if bgr2rgb:
+        if self.bgr2rgb:
             bgr = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
             bgr = np.float32(bgr)
             bgr = (bgr-bgr.min())/(bgr.max()-bgr.min())
@@ -85,3 +86,6 @@ if __name__ == "__main__":
         shuffle=True,
         num_workers=2,
     )
+    r,h = TrainDataset.__getitem__(dataset,0)
+    print(r.shape)
+    print(h.shape)
