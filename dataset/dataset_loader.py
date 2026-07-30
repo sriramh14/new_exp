@@ -48,7 +48,7 @@ class TrainDataset(Dataset):
         return np.ascontiguousarray(bgr), np.ascontiguousarray(hyper)
 
     def __len__(self):
-        return self.patch_per_img*self.img_num
+        return self.img_num
 
 
 #Smoke test to check if code runs
