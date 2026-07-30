@@ -11,10 +11,10 @@ class mrae(nn.module):
     Args:
         eps (float): Small constant to avoid division by zero.
     """
-    def __init__(self, eps: float = 1e-8):
-        super().__init__()
-        self.eps = eps
+  def __init__(self, eps: float = 1e-8):
+    super().__init__()
+    self.eps = eps
 
-    def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
-        relative_error = torch.abs(pred - target) / (torch.abs(target) + self.eps)
-        return relative_error.mean()
+  def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
+    relative_error = torch.abs(pred - target) / (torch.abs(target) + self.eps)
+    return relative_error.mean()
