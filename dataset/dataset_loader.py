@@ -66,7 +66,7 @@ class TrainDataset(Dataset):
 
 
 #Smoke test to check if code runs
-if __name__ = "__main__":
+if __name__ == "__main__":
     dir_rgb = "/kaggle/input/datasets/sriramhari14/ntire-2022/Train_RGB"
     dir_hsi = "/kaggle/input/datasets/sriramhari14/ntire-2022/Train_spectral"
     dataset = TrainDataset(dir_rgb,dir_hsi)
