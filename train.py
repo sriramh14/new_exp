@@ -150,7 +150,7 @@ def main() -> None:
             hsi = hsi.to(device)
 
     
-            outputs = model(images)
+            outputs = model(rgb)
     
             loss = criterion(pred = hsi,target = outputs)
     
