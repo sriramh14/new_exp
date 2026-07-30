@@ -6,12 +6,16 @@ import h5py
 
 class TrainDataset(Dataset):
     def __init__(self, dir_rgb, dir_hsi, train_list_dir, bgr2rgb=True):
+
+        #List to store hyper and rgb imgs
         self.hypers = []
         self.bgrs = []
         h,w = 482,512  # img shape
 
         hyper_data_path = f'{dir_hsi}/Train_spectral/'
         bgr_data_path = f'{dir_rgb}/Train_RGB/'
+
+        #Opens list file and saves the list as array
         with open(train_list_path, 'r') as fin:
             hyper_list = [line.replace('\n','.mat') for line in fin]
             bgr_list = [line.replace('mat','jpg') for line in hyper_list]
@@ -23,15 +27,25 @@ class TrainDataset(Dataset):
             hyper_path = hyper_data_path + hyper_list[i]
             if 'mat' not in hyper_path:
                 continue
+
+            #Reading hsi file
             with h5py.File(hyper_path, 'r') as mat:
                 hyper =np.float32(np.array(mat['cube']))
             hyper = np.transpose(hyper, [0, 2, 1])
+
+            
             bgr_path = bgr_data_path + bgr_list[i]
+
+            #check to see if rgb and hsi are from same scene
             assert hyper_list[i].split('.')[0] ==bgr_list[i].split('.')[0], 'Hyper and RGB come from different scenes.'
+
+            #Reading rgb file and then converting from bgr to rgb
             bgr = cv2.imread(bgr_path)
             if bgr2rgb:
                 bgr = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
             bgr = np.float32(bgr)
+
+            #Normalisation? Im not too sure 
             bgr = (bgr-bgr.min())/(bgr.max()-bgr.min())
             bgr = np.transpose(bgr, [2, 0, 1])  # [3,482,512]
             self.hypers.append(hyper)
@@ -39,7 +53,7 @@ class TrainDataset(Dataset):
             mat.close()
             print(f'Ntire2022 scene {i} is loaded.')
         self.img_num = len(self.hypers)
-        self.length = self.patch_per_img * self.img_num
+        self.length = self.img_num
 
     
     def __getitem__(self, idx):
