@@ -114,7 +114,7 @@ def main() -> None:
     #Train
     for rgb, hsi in train_loader:
 
-        images = images.to(device)
+        rgb = rgb.to(device)
         hsi = hsi.to(device)
 
         #Resetting gradients to zero
