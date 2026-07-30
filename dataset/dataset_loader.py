@@ -5,7 +5,7 @@ import cv2
 import h5py
 
 class TrainDataset(Dataset):
-    def __init__(self, dir_rgb,dir_hsi,train_list_dir bgr2rgb=True):
+    def __init__(self, dir_rgb, dir_hsi, train_list_dir, bgr2rgb=True):
         self.hypers = []
         self.bgrs = []
         h,w = 482,512  # img shape
@@ -51,13 +51,15 @@ class TrainDataset(Dataset):
         return self.patch_per_img*self.img_num
 
 
-dir_rgb = "/kaggle/input/datasets/sriramhari14/ntire-2022/Train_RGB"
-dir_hsi = "/kaggle/input/datasets/sriramhari14/ntire-2022/Train_spectral"
-dataset = TrainDataset(dir_rgb,dir_hsi)
-print(TrainDataset.__len__(dataset))
-loader = DataLoader(
-    dataset,
-    batch_size=2,
-    shuffle=True,
-    num_workers=2,
-)
+#Smoke test to check if code runs
+if __name__ = "__main__":
+    dir_rgb = "/kaggle/input/datasets/sriramhari14/ntire-2022/Train_RGB"
+    dir_hsi = "/kaggle/input/datasets/sriramhari14/ntire-2022/Train_spectral"
+    dataset = TrainDataset(dir_rgb,dir_hsi)
+    print(TrainDataset.__len__(dataset))
+    loader = DataLoader(
+        dataset,
+        batch_size=2,
+        shuffle=True,
+        num_workers=2,
+    )
