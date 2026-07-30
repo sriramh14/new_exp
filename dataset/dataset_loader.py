@@ -16,7 +16,7 @@ class TrainDataset(Dataset):
         bgr_data_path = f'{dir_rgb}/Train_RGB/'
 
         #Opens list file and saves the list as array
-        with open(train_list_path, 'r') as fin:
+        with open(train_list_dir, 'r') as fin:
             hyper_list = [line.replace('\n','.mat') for line in fin]
             bgr_list = [line.replace('mat','jpg') for line in hyper_list]
         hyper_list.sort()
