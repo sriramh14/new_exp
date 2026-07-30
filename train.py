@@ -46,14 +46,14 @@ def main() -> None:
   #Creating train and valid datasets
   print("Creating train dataset\n")
   train = TrainDataset(
-    dir_rgb = train_rgb_dir,
-    dir_hsi = train_hsi_dir,
+    dir_rgb = train_dir_rgb,
+    dir_hsi = train_dir_hsi,
     train_list_dir = train_list_dir
   )
   print("Creating validation dataset\n")
   val = TrainDataset(
-    dir_rgb = val_rgb_dir,
-    dir_hsi = val_hsi_dir,
+    dir_rgb = val_dir_rgb,
+    dir_hsi = val_dir_hsi,
     train_list_dir = val_list_dir
   )
 
