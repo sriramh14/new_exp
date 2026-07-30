@@ -48,13 +48,15 @@ def main() -> None:
   train = TrainDataset(
     dir_rgb = train_dir_rgb,
     dir_hsi = train_dir_hsi,
-    train_list_dir = train_list_dir
+    train_list_dir = train_list_dir,
+    train = True
   )
   print("Creating validation dataset\n")
   val = TrainDataset(
     dir_rgb = val_dir_rgb,
     dir_hsi = val_dir_hsi,
-    train_list_dir = valid_list_dir
+    train_list_dir = valid_list_dir,
+    train = False
   )
 
   #Creating dataloader objects of val and train
