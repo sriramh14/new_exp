@@ -5,15 +5,18 @@ import cv2
 import h5py
 
 class TrainDataset(Dataset):
-    def __init__(self, dir_rgb, dir_hsi, train_list_dir, bgr2rgb=True):
+    def __init__(self, dir_rgb, dir_hsi, train_list_dir, bgr2rgb=True, train = True):
 
         #List to store hyper and rgb imgs
         self.hypers = []
         self.bgrs = []
         h,w = 482,512  # img shape
-
-        hyper_data_path = f'{dir_hsi}/Train_spectral/'
-        bgr_data_path = f'{dir_rgb}/Train_RGB/'
+        if train:
+            hyper_data_path = f'{dir_hsi}/Train_spectral/'
+            bgr_data_path = f'{dir_rgb}/Train_RGB/'
+        else:
+            hyper_data_path = f'{dir_hsi}/Valid_spectral/'
+            bgr_data_path = f'{dir_rgb}/Valid_RGB/'
 
         #Opens list file and saves the list as array
         with open(train_list_dir, 'r') as fin:
