@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-class mrae(nn.module):
+class mrae(nn.Module):
   """
     Mean Relative Absolute Error (MRAE)
 
