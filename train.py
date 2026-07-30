@@ -9,7 +9,10 @@ from torch.utils.data import Dataset, DataLoader
 from dataset.dataset_loader import TrainDataset
 
 #Model import
-from model.classifier import ASLClassifier
+from models.MST_Plus_Plus import MST_Plus_Plus
+
+#Loss import
+from loss.mrae import mrae
 
 
 #Config variables
@@ -27,7 +30,10 @@ NUM_EPOCHS = 50
 LEARNING_RATE = 1e-3
 LEARNING_RATE_MIN = 1e-6
 PIN_MEMORY = True
-
+IN_CHANNELS = 3
+OUT_CHANNELS = 31
+N_FEAT = 31
+STAGE = 3
 
 
 def main() -> None:
@@ -38,20 +44,45 @@ def main() -> None:
   )
 
   #Creating train and valid datasets
-  train = TrainDataset(train_rgb_dir,train_hsi_dir,train_list_dir)
-  val = TrainDataset(val_rgb_dir,val_hsi_dir,val_list_dir)
+  train = TrainDataset(
+    dir_rgb = train_rgb_dir,
+    dir_hsi = train_hsi_dir,
+    train_list_dir = train_list_dir
+  )
+  val = TrainDataset(
+    dir_rgb = val_rgb_dir,
+    dir_hsi = val_hsi_dir,
+    train_list_dir = val_list_dir
+  )
 
   #Creating dataloader objects of val and train
-  train_loader = DataLoader(train,batch_size = BATCH_SIZE, shuffle = SHUFFLE, num_workers = NUM_WORKERS,pin_memory=PIN_MEMORY)
-  val_loader = DataLoader(val,batch_size = BATCH_SIZE, shuffle = False, num_workers = NUM_WORKERS,pin_memory=PIN_MEMORY)
+  train_loader = DataLoader(
+    train,batch_size = BATCH_SIZE,
+    shuffle = SHUFFLE,
+    num_workers = NUM_WORKERS,
+    pin_memory=PIN_MEMORY
+  )
+  val_loader = DataLoader(
+    val,
+    batch_size = BATCH_SIZE,
+    shuffle = False,
+    num_workers = NUM_WORKERS,
+    pin_memory=PIN_MEMORY
+  )
 
   #Model instantiation
-  model = ASLClassifier(num_classes = NUM_CLASSES)
+  model = MST_Plus_Plus(
+    in_channels = IN_CHANNELS,
+    out_channels = OUT_CHANNELS,
+    n_feat = N_FEAT,
+    stage = STAGE
+  )
   model = model.to(device)
 
 
   #Loss
-  criterion = nn.CrossEntropyLoss()
+  criterion = mrae()
+  criterion.to(device)
 
   #Optimiser and LR scheduler
   optimizer = optim.Adam(
@@ -77,17 +108,17 @@ def main() -> None:
     total = 0
 
     #Train
-    for images, labels in train_loader:
+    for rgb, hsi in train_loader:
 
         images = images.to(device)
-        labels = labels.to(device)
+        hsi = hsi.to(device)
 
         #Resetting gradients to zero
         optimizer.zero_grad()
 
-        outputs = model(images)
+        outputs = model(rgb)
 
-        loss = criterion(outputs, labels)
+        loss = criterion(pred = hsi,target = outputs)
 
         loss.backward()
 
@@ -95,14 +126,7 @@ def main() -> None:
 
         running_loss += loss.detach().float()
 
-        predictions = outputs.argmax(dim=1)
-
-        correct += (predictions == labels).sum().item()
-
-        total += labels.size(0)
-
     train_loss = running_loss.item() / len(train_loader)
-    train_acc = correct / total
 
     scheduler.step()
 
@@ -116,25 +140,20 @@ def main() -> None:
     #Disabling grad
     with torch.no_grad():
     
-        for images, labels in val_loader:
+        for rgb,hsi in val_loader:
     
-            images = images.to(device)
-            labels = labels.to(device)
+            rgb = rgb.to(device)
+            hsi = hsi.to(device)
+
     
             outputs = model(images)
     
-            loss = criterion(outputs, labels)
+            loss = criterion(pred = hsi,target = outputs)
     
             val_loss += loss.item()
     
-            predictions = outputs.argmax(dim=1)
-    
-            correct += (predictions == labels).sum().item()
-    
-            total += labels.size(0)
     
     val_loss /= len(val_loader)
-    val_acc = correct / total
 
     #Save model if validation metrics are highest its ever been
     if val_acc > best_acc:
