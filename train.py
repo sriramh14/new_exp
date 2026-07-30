@@ -98,7 +98,7 @@ def main() -> None:
     T_max = NUM_EPOCHS,
     eta_min = LEARNING_RATE_MIN
   )
-  best_acc = float('inf')
+  best_loss = float('inf')
   #Training loop
   for epoch in range(NUM_EPOCHS):
     
