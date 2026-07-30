@@ -33,7 +33,7 @@ PIN_MEMORY = True
 IN_CHANNELS = 3
 OUT_CHANNELS = 31
 N_FEAT = 31
-STAGE = 3
+STAGE = 1
 
 
 def main() -> None:
@@ -44,11 +44,13 @@ def main() -> None:
   )
 
   #Creating train and valid datasets
+  print("Creating train dataset\n")
   train = TrainDataset(
     dir_rgb = train_rgb_dir,
     dir_hsi = train_hsi_dir,
     train_list_dir = train_list_dir
   )
+  print("Creating validation dataset\n")
   val = TrainDataset(
     dir_rgb = val_rgb_dir,
     dir_hsi = val_hsi_dir,
@@ -94,7 +96,7 @@ def main() -> None:
     T_max = NUM_EPOCHS,
     eta_min = LEARNING_RATE_MIN
   )
-  best_acc = 0.0
+  best_acc = float('inf')
   #Training loop
   for epoch in range(NUM_EPOCHS):
     
@@ -156,9 +158,9 @@ def main() -> None:
     val_loss /= len(val_loader)
 
     #Save model if validation metrics are highest its ever been
-    if val_acc > best_acc:
-      best_acc = val_acc
-  
+    if val_loss < best_loss:
+      best_loss = val_loss
+      print("Saving model\n")
       torch.save(
           model.state_dict(),
           "best_model.pth"
@@ -168,9 +170,7 @@ def main() -> None:
     print(
         f"Epoch [{epoch+1}/{NUM_EPOCHS}] "
         f"Train Loss: {train_loss:.4f} "
-        f"Train Acc: {train_acc:.4f} "
         f"Val Loss: {val_loss:.4f} "
-        f"Val Acc: {val_acc:.4f}"
     )
   
   
