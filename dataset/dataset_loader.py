@@ -60,7 +60,7 @@ class TrainDataset(Dataset):
             bgr = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
             bgr = np.float32(bgr)
             #bgr = (bgr-bgr.min())/(bgr.max()-bgr.min())
-            bgr = bgr.float()/255.0
+            bgr = bgr/255.0
             bgr = np.transpose(bgr, [2, 0, 1])  # [3,482,512]
             mat.close()
 
