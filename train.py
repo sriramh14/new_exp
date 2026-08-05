@@ -122,7 +122,7 @@ def main() -> None:
 
         outputs = model(rgb)
 
-        loss = criterion(pred = hsi,target = outputs)
+        loss = criterion(pred = outputs,target = hsi)
 
         loss.backward()
 
@@ -152,7 +152,7 @@ def main() -> None:
     
             outputs = model(rgb)
     
-            loss = criterion(pred = hsi,target = outputs)
+            loss = criterion(pred = outputs,target = hsi)
     
             val_loss += loss.item()
     
