@@ -34,7 +34,7 @@ IN_CHANNELS = 3
 OUT_CHANNELS = 31
 N_FEAT = 31
 STAGE = 1
-
+TOTAL_ITERATION = NUM_EPOCHS * 897    #897 is number of lines in train_list.txt
 
 def main() -> None:
 
@@ -95,7 +95,7 @@ def main() -> None:
   )  
   scheduler = optim.lr_scheduler.CosineAnnealingLR(
     optimizer,
-    T_max = NUM_EPOCHS,
+    T_max = TOTAL_ITERATION,
     eta_min = LEARNING_RATE_MIN
   )
   best_loss = float('inf')
