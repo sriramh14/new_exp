@@ -139,7 +139,7 @@ class MS_MSA(nn.Module):
         return out
 
 class FeedForward(nn.Module):
-    def __init__(self, dim, mult=4):
+    def __init__(self, dim, mult=2):
         super().__init__()
         self.net = nn.Sequential(
             nn.Conv2d(dim, dim * mult, 1, 1, bias=False),
