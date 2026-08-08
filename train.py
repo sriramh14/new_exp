@@ -127,12 +127,13 @@ def main() -> None:
         loss.backward()
 
         optimizer.step()
+        scheduler.step()
 
         running_loss += loss.detach().float()
 
     train_loss = running_loss.item() / len(train_loader)
 
-    scheduler.step()
+    #scheduler.step()
 
     #Validation 
     model.eval()
