@@ -34,6 +34,7 @@ IN_CHANNELS = 3
 OUT_CHANNELS = 31
 N_FEAT = 31
 STAGE = 1
+WEIGHT_DECAY = 1e-2
 TOTAL_ITERATION = NUM_EPOCHS * 897    #897 is number of lines in train_list.txt
 
 def main() -> None:
@@ -89,9 +90,10 @@ def main() -> None:
   criterion.to(device)
 
   #Optimiser and LR scheduler
-  optimizer = optim.Adam(
+  optimizer = optim.AdamW(
     model.parameters(),
-    lr=LEARNING_RATE
+    lr=LEARNING_RATE,
+    weight_decay = WEIGHT_DECAY
   )  
   scheduler = optim.lr_scheduler.CosineAnnealingLR(
     optimizer,
