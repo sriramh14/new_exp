@@ -33,7 +33,7 @@ PIN_MEMORY = True
 IN_CHANNELS = 3
 OUT_CHANNELS = 31
 N_FEAT = 31
-STAGE = 3
+STAGE = 1
 WEIGHT_DECAY = 1e-2
 TOTAL_ITERATION = NUM_EPOCHS * 897    #897 is number of lines in train_list.txt
 
